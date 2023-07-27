@@ -193,7 +193,7 @@ contract Dice is Common {
             dicePlay[i] = uint8((randomWords[i] % 6) + 1);
 
             if (dicePlay[i] == game.diceNum) {
-                totalValue += int256((game.wager * 9800) / 10000);
+                totalValue += int256((game.wager * 49000) / 10000);
                 payout += (game.wager * 58800) / 10000;
                 payouts[i] = (game.wager * 58800) / 10000;
                 continue;
