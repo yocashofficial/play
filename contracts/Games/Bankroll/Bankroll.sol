@@ -14,6 +14,8 @@ contract Bankroll {
     address public ownerAddress;
     address[] allowedTokens;
 
+    event nativeTokenTransferFailed(address indexed player, uint256 amount);
+
     modifier onlyOwner() {
         require(msg.sender == ownerAddress, "Not Owner");
         _;
@@ -50,7 +52,9 @@ contract Bankroll {
             (bool success, ) = payable(player).call{value: payout, gas: 2400}(
                 ""
             );
-            require(success, "Transfer Failed");
+            if (!success) {
+                emit nativeTokenTransferFailed(player, payout);
+            }
         }
     }
 
