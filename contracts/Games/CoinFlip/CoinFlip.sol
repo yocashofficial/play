@@ -126,8 +126,8 @@ contract CoinFlip is Common {
     }
 
     function gameRefund() external nonReentrant {
-        address msgSender = msg.sender;
-        CoinFlipGame storage game = coinFlipGames[msgSender];
+        require(tx.origin == msg.sender, "no contracts refunds allowed");
+        CoinFlipGame storage game = coinFlipGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
         }
@@ -139,17 +139,17 @@ contract CoinFlip is Common {
         address tokenAddress = game.tokenAddress;
 
         delete (coinIDs[game.requestID]);
-        delete (coinFlipGames[msgSender]);
+        delete (coinFlipGames[msg.sender]);
 
         if (tokenAddress == address(0)) {
-            (bool success, ) = payable(msgSender).call{value: wager}("");
+            (bool success, ) = payable(msg.sender).call{value: wager}("");
             if (!success) {
                 revert TransferFailed();
             }
         } else {
-            IERC20(tokenAddress).safeTransfer(msgSender, wager);
+            IERC20(tokenAddress).safeTransfer(msg.sender, wager);
         }
-        emit gameRefundEvent(msgSender, wager, tokenAddress);
+        emit gameRefundEvent(msg.sender, wager, tokenAddress);
     }
 
     function rawFulfillRandomWords(
