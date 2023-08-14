@@ -129,6 +129,7 @@ contract RockPaperScissors is Common {
     }
 
     function gameRefund() external nonReentrant {
+        require(tx.origin == msg.sender, "no contracts refunds allowed");
         RockPaperScissorsGame storage game = rockPaperScissorsGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
