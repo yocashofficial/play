@@ -127,6 +127,7 @@ contract Slots is Common {
     }
 
     function gameRefund() external nonReentrant {
+        require(tx.origin == msg.sender, "no contracts refunds allowed");
         SlotsGame storage game = slotsGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
