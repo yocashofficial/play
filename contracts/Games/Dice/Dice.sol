@@ -130,7 +130,7 @@ contract Dice is Common {
     }
 
     function gameRefund() external nonReentrant {
-        require(tx.origin == msg.sender, "no contracts refunds allowed");
+        require(tx.origin == msg.sender, "no contracts refunds allowed");  // this is intended and will be compensated manually
         DiceGame storage game = diceGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
