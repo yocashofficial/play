@@ -130,13 +130,13 @@ contract Dice is Common {
     }
 
     function gameRefund() external nonReentrant {
-        require(tx.origin == msg.sender, "no contracts refunds allowed");  // this is intended and will be compensated manually
+        require(tx.origin == msg.sender, "no contracts refunds allowed");
         DiceGame storage game = diceGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
         }
-        if (game.blockNumber + 200 > block.number) {
-            revert BlockNumberTooLow(block.number, game.blockNumber + 200);
+        if (game.blockNumber + 2010 > block.number) {
+            revert BlockNumberTooLow(block.number, game.blockNumber + 2010);
         }
 
         uint256 wager = game.wager * game.numBets;
@@ -174,6 +174,7 @@ contract Dice is Common {
         address playerAddress = diceIDs[requestId];
         if (playerAddress == address(0)) revert();
         DiceGame storage game = diceGames[playerAddress];
+        if (block.number > game.blockNumber + 2000) revert();
 
         int256 totalValue;
         uint256 payout;
