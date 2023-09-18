@@ -129,13 +129,13 @@ contract RockPaperScissors is Common {
     }
 
     function gameRefund() external nonReentrant {
-        require(tx.origin == msg.sender, "no contracts refunds allowed");   // this is intended and will be compensated manually
+        require(tx.origin == msg.sender, "no contracts refunds allowed");
         RockPaperScissorsGame storage game = rockPaperScissorsGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
         }
-        if (game.blockNumber + 200 > block.number) {
-            revert BlockNumberTooLow(block.number, game.blockNumber + 200);
+        if (game.blockNumber + 2010 > block.number) {
+            revert BlockNumberTooLow(block.number, game.blockNumber + 2010);
         }
 
         uint256 wager = game.wager * game.numBets;
@@ -174,6 +174,7 @@ contract RockPaperScissors is Common {
         RockPaperScissorsGame storage game = rockPaperScissorsGames[
             playerAddress
         ];
+        if (block.number > game.blockNumber + 2000) revert();
 
         uint8[] memory randomActions = new uint8[](game.numBets);
         uint8[] memory outcomes = new uint8[](game.numBets);
