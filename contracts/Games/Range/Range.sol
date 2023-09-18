@@ -135,13 +135,13 @@ contract Range is Common {
     }
 
     function gameRefund() external nonReentrant {
-        require(tx.origin == msg.sender, "no contracts refunds allowed");  // this is intended and will be compensated manually
+        require(tx.origin == msg.sender, "no contracts refunds allowed");
         RangeGame storage game = rangeGames[msg.sender];
         if (game.requestID == 0) {
             revert NotAwaitingVRF();
         }
-        if (game.blockNumber + 200 > block.number) {
-            revert BlockNumberTooLow(block.number, game.blockNumber + 200);
+        if (game.blockNumber + 2010 > block.number) {
+            revert BlockNumberTooLow(block.number, game.blockNumber + 2010);
         }
 
         uint256 wager = game.wager * game.numBets;
@@ -178,6 +178,7 @@ contract Range is Common {
         address playerAddress = rangeIDs[requestId];
         if (playerAddress == address(0)) revert();
         RangeGame storage game = rangeGames[playerAddress];
+        if (block.number > game.blockNumber + 2000) revert();
 
         int256 totalValue;
         uint256 payout;
